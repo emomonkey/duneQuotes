@@ -1,7 +1,7 @@
 development:
   clients:
     default:
-      uri: "mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/quotes?retryWrites=true&w=majority&appName=YOUR_APP"
+      uri: 
       options:
         auth_mech: :scram
         server_selection_timeout: 5

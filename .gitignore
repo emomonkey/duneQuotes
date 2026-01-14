@@ -1,0 +1,4 @@
+mongoid.yml
+.env
+*.log
+advice.txt

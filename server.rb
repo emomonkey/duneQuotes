@@ -7,9 +7,13 @@ require 'json'
 # Load mongoid configuration, using MONGODB_URI env var for production if needed
 if ENV['MONGODB_URI']
   Mongoid.configure do |config|
-    config.clients.default.uri = ENV['MONGODB_URI']
-    config.clients.default.options.auth_mech = :scram
-    config.clients.default.options.server_selection_timeout = 5
+    config.clients.default = {
+      uri: ENV['MONGODB_URI'],
+      options: {
+        auth_mech: :scram,
+        server_selection_timeout: 5
+      }
+    }
   end
 else
   Mongoid.load! "mongoid.yml"

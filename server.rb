@@ -4,7 +4,16 @@ require "sinatra/namespace"
 require 'mongoid'
 require 'json'
 
-Mongoid.load! "mongoid.yml"
+# Load mongoid configuration, using MONGODB_URI env var for production if needed
+if ENV['MONGODB_URI']
+  Mongoid.configure do |config|
+    config.clients.default.uri = ENV['MONGODB_URI']
+    config.clients.default.options.auth_mech = :scram
+    config.clients.default.options.server_selection_timeout = 5
+  end
+else
+  Mongoid.load! "mongoid.yml"
+end
 
 class Quote
   include Mongoid::Document
@@ -36,9 +45,13 @@ namespace '/api/v1' do
   get '/quotes' do
     quotes = Quote.all
 
-    [:quote, :character].each do |filter|
-      quotes = quotes.where(filter => /^#{params[filter]}/) if params[filter]
-    end      
+    if params[:character]
+      quotes = quotes.where(character: /^#{params[:character]}/)
+    end
+
+    if params[:quote]
+      quotes = quotes.where(quote: /^#{params[:quote]}/)
+    end
 
     if params[:limit]
       limit = params[:limit].to_i

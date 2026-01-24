@@ -37,7 +37,7 @@ namespace '/api/v1' do
     quotes = Quote.all
 
     [:quote, :character].each do |filter|
-      quotes = quotes.send(filter => params[filter]) if params[filter]
+      quotes = quotes.where(filter => /^#{params[filter]}/) if params[filter]
     end      
 
     if params[:limit]
